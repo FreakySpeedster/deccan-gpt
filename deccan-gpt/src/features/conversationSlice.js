@@ -38,7 +38,25 @@ const conversationSlice = createSlice({
     finishConversation(state, action) {
       state.activeConversation.feedback = action.payload;
       state.activeConversation.isFinished = true;
-      state.conversations.push(state.activeConversation);
+      state.conversations.unshift(state.activeConversation);
+    },
+    setConversations(state, action) {
+      state.conversations = action.payload;
+    },
+    setActiveConversation(state, action) {
+      state.activeConversation = action.payload;
+    },
+    startNewConversation(state) {
+      state.activeConversation = {
+        id: `conv_${Date.now()}`,
+        messages: [],
+        feedback: {
+          responses: [],
+          overallRating: null,
+          subjectiveFeedback: ''
+        },
+        isFinished: false
+      };
     }
   }
 });
@@ -47,7 +65,10 @@ export const {
   addUserMessage,
   addAiResponse,
   addFeedbackToMessage,
-  finishConversation
+  finishConversation,
+  setConversations,
+  setActiveConversation,
+  startNewConversation
 } = conversationSlice.actions;
 
 export default conversationSlice.reducer;
