@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #fff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -65,6 +65,86 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+
+/* All custom classes */
+
+.page-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+
+.page-wrapper {
+  background-color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.page-wrapper_flex-end {
+  justify-content: flex-end; /* Aligns items at the bottom */
+}
+
+.page-wrapper_flex-start {
+  justify-content: flex-start;
+}
+
+.custom-button {
+  background-color: #fff !important;
+  color: #636363 !important;        
+  border-radius: 10px !important;   
+  height: 40px;          
+  box-shadow: none !important;
+  border: 1px solid #636363 !important;
+  text-transform: none !important;
+  padding: 6px 16px !important;
+  min-width: 30px;
+  font-size: 0.875rem;                    
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
+}
+
+.custom-button:hover {
+  background-color: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  border: 1px solid #f5f5f5 !important;
+}
+
+.custom-button:focus {
+  outline: none;  /* removes default focus ring if needed */
+}
+
+.ml-20 {
+  margin-left: 20px !important;
+}
+
+.align-heading {
+  align-items: center;
+}
+
+.ml-auto {
+  margin-left: auto !important;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.conversations-container {
+  overflow-y: auto;
+  margin-bottom: 16px; /* mb: 2 translates to 2 * 8px (default spacing in MUI theme) */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .load-conversations {

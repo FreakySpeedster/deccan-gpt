@@ -22,15 +22,17 @@ export function makeServer() {
       // POST /chat: AI responses (60% failure simulation)
       this.post('/chat', (schema, request) => {
         const responses = [
-          "Hello! How can I help you today?",
-          "Sure! Here's something interesting.",
-          "That's a great question!",
-          "Let me check on that for you!"
+          "Hello! How can I assist you in the best way today?",
+          "Great question! Let me provide you with some insightful information.",
+          "I'm here to help! What would you like to explore?",
+          "Let me think... Here's something that might interest you!",
+          "That’s a fascinating topic! Let’s dive deeper into it.",
+          "I love curiosity! Here’s an interesting perspective.",
+          "Let me analyze that for you and give you the best answer!",
+          "You're onto something intriguing! Let's break it down step by step.",
+          "That’s a thought-provoking question. Here's what I found!",
+          "I appreciate the question! Here's my take on it."
         ];
-
-        if (Math.random() < 0.6) {
-          return new Response(500, {}, { error: "AI model failed to respond." });
-        }
 
         const randomResponse = responses[Math.floor(Math.random() * responses.length)];
         return { response: randomResponse };
@@ -43,11 +45,16 @@ export function makeServer() {
         const existingConversation = schema.db.conversations.find(id);
 
         if (existingConversation) {
-          // Update existing
+          // Update existing conversation with feedback data
           schema.db.conversations.update(id, attrs);
+          let targetData = schema.db.conversationLists.find(id);
+          targetData.feedback = attrs.feedback;
+          targetData.isFinished = attrs.isFinished;
+          schema.db.conversationLists.update(id, targetData);
           return { message: 'Conversation updated successfully', conversation: schema.db.conversations.find(id) };
         } else {
           schema.db.conversations.insert(attrs);
+          schema.db.conversationList.insert(attrs);
           return { message: 'Conversation saved successfully', conversation: schema.db.conversations.find(id) };
         }
       });
