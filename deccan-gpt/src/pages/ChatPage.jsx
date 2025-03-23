@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUserMessage, addAiResponse, setConversations, 
-  setActiveConversation, finishConversation, startNewConversation } from '../features/conversationSlice';
+  setActiveConversation, finishConversation, 
+  startNewConversation, likeMessage, dislikeMessage, saveConversation } from '../features/conversationSlice';
 import { Box, Button, TextField, Typography, Paper, IconButton, Rating } from '@mui/material';
-import { ThumbUp, ThumbDown, ArrowCircleUp, Close } from '@mui/icons-material';
+import { ThumbUp, ThumbDown, ArrowCircleUp, Close, IosShare } from '@mui/icons-material';
 import deccanSvg from '../assets/deccan.svg';
 import Sidebar from '../components/SideBar/SideBar';
 import FeedbackModal from '../components/FeedbackModal/FeedbackModal';
+import ShareChatModal from '../components/ShareChatModal/ShareChatModal';
+import { useStore } from 'react-redux';
 
 export default function ChatPage() {
   const dispatch = useDispatch();
+  const store = useStore();
   const conversation = useSelector(state => state.conversations.activeConversation);
   const conversations = useSelector((state) => state.conversations.conversations);
 
@@ -17,6 +21,8 @@ export default function ChatPage() {
   const [isLoadingConversations, setIsLoadingConversations] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState('');
   const [selectedConversationId, setSelectedConversationId] = useState('');
   
 
@@ -71,24 +77,37 @@ export default function ChatPage() {
     setSelectedConversationId('');
   }
 
+  const saveCurrentConversation = async () => {
+    if (conversation.messages.length > 0) {
+      dispatch(saveConversation());
+      const updatedConversation = store.getState().conversations.activeConversation;
+      await fetch('/api/save-conversation', {
+        method: 'POST',
+        body: JSON.stringify(updatedConversation),
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+  }
+
   const handleFeedbackSubmit = async (feedbackData) => {
     try {
       dispatch(finishConversation(feedbackData));
-      dispatch(addAiResponse("Noted! Thank you for the feedback."));
-      console.log(feedbackData);
-      const response = await fetch('/api/save-conversation', {
-        method: 'POST',
-        body: JSON.stringify({ conversation }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      saveCurrentConversation();
       setIsFeedbackOpen(false);
-      dispatch(startNewConversation());
     }
     catch (error) {
       console.error(error);
       dispatch(addAiResponse("Noted! Thank you for the feedback."));
     }
   }
+
+  const generateShareLink = () => {
+    saveCurrentConversation();
+    const generatedShareLink = `${window.location.origin}/shared-conversation/${selectedConversationId}`;
+    setGeneratedLink(generatedShareLink);
+    setIsShareOpen(true);
+  };
   
 
   const toggleSidebar = () => {
@@ -96,6 +115,7 @@ export default function ChatPage() {
   };
 
   const handleSelectConversation = async (id) => {
+    saveCurrentConversation();
     console.log('Selected conversation ID:', id);
     setSelectedConversationId(id);
     // Dispatch load conversation logic if available
@@ -128,9 +148,25 @@ export default function ChatPage() {
           <Typography variant="h4" gutterBottom>
             <img src={deccanSvg} alt="Deccan Logo" />
           </Typography>
-          {!conversation?.isFinished && conversation?.messages.length > 0 && (<Button sx={{backgroundColor: '#fff', borderRadius: '10px', height: '40px', marginLeft: 'auto', boxShadow: 'none'}} variant="contained" onClick={triggerFeedbackModal}>
-            <Close sx={{ color: '#d3302f', fontSize: '30px' }} />
-          </Button>)}
+          <Box sx={{marginLeft: 'auto'}}>
+            <Button sx={{backgroundColor: '#fff', color: '#636363', borderRadius: '10px', height: '40px', boxShadow: 'none', border: '1px solid #636363',
+              '&:hover': { backgroundColor: '#000', color: '#fff', boxShadow: 'none', border: '1px solid #f5f5f5' }
+              }}
+              variant="contained" 
+              onClick={generateShareLink}>
+              <IosShare sx={{ fontSize: '16px', marginBottom: '2px' }} /> 
+              <Typography style={{ textTransform: 'none', fontSize: '14px' }}>Share</Typography>
+            </Button>
+          {!conversation?.isFinished && conversation?.messages.length > 0 && 
+            (<Button sx={{backgroundColor: '#fff', color: '#636363', borderRadius: '10px', height: '40px', marginLeft: '20px', boxShadow: 'none', border: '1px solid #636363',
+              '&:hover': { backgroundColor: '#000', color: '#fff', boxShadow: 'none', border: '1px solid #f5f5f5' }
+              }}
+              variant="contained" 
+              onClick={triggerFeedbackModal}>
+              <Close sx={{ fontSize: '18px' }} /> 
+              <Typography style={{ textTransform: 'none', fontSize: '14px' }}>End</Typography>
+            </Button>)}
+          </Box>
         </Box>
         
 
@@ -144,17 +180,31 @@ export default function ChatPage() {
               alignSelf: msg.role === 'ai' ? 'flex-start' : 'flex-end',
               maxWidth: msg.role === 'ai' ? '100%' : '60%',
               width: 'auto',
-              wordWrap: 'break-word'
+              wordWrap: 'break-word',
+              '&:hover .icon-buttons': {
+                visibility: 'visible'
+              }
             }}>
               <Typography>{msg.content}</Typography>
 
               {msg.role === 'ai' && (
-                <Box sx={{ mt: 1 }}>
-                  <IconButton color="#000" onClick={() => console.log('Thumb Up')}>
-                    <ThumbUp />
+                <Box
+                  className="icon-buttons"
+                  sx={{
+                    visibility: 'hidden', // hide by default
+                  }}
+                >
+                  <IconButton size='small'
+                    onClick={() => dispatch(likeMessage(msg.id))}
+                    color={msg.liked ? 'primary' : 'default'}
+                  >
+                    <ThumbUp fontSize='small'/>
                   </IconButton>
-                  <IconButton color="error" onClick={() => console.log('Thumb Down')}>
-                    <ThumbDown />
+                  <IconButton size='small' sx={{ fontSize: '3px' }}
+                    onClick={() => dispatch(dislikeMessage(msg.id))}
+                    color={msg.disliked ? 'error' : 'default'}
+                  >
+                    <ThumbDown fontSize='small'/>
                   </IconButton>
                 </Box>
               )}
@@ -203,6 +253,11 @@ export default function ChatPage() {
         open={isFeedbackOpen}
         onClose={() => setIsFeedbackOpen(false)}
         onSubmit={handleFeedbackSubmit}
+      />
+      <ShareChatModal
+        open={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        generatedLink={generatedLink}
       />
     </Box>
   );

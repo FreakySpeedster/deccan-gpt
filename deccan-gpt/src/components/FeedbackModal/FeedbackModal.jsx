@@ -3,12 +3,10 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, R
 
 const FeedbackModal = ({ open, onClose, onSubmit }) => {
   const [overallRating, setOverallRating] = useState(0);
-  const [subjectivefeedback, setSubjectiveFeedback] = useState('');
+  const [subjectiveFeedback, setSubjectiveFeedback] = useState('');
 
   const handleSubmit = () => {
-    // Do something with feedback
-    onSubmit({ overallRating, subjectivefeedback });
-    // Reset fields (optional)
+    onSubmit({ overallRating, subjectiveFeedback });
     setOverallRating(0);
     setSubjectiveFeedback('');
   };
@@ -29,7 +27,7 @@ const FeedbackModal = ({ open, onClose, onSubmit }) => {
           multiline
           rows={4}
           fullWidth
-          value={subjectivefeedback}
+          value={subjectiveFeedback}
           onChange={(e) => setSubjectiveFeedback(e.target.value)}
         />
       </DialogContent>
