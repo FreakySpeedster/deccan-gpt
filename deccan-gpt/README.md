@@ -2,6 +2,8 @@
 
 Deccan GPT is a React project created with Vite. It uses Mirage JS for mocking APIs, which is enabled in both development and production environments.
 
+Hosted the app on Vercel. Click to check it out in action -> https://deccan-gpt.vercel.app/
+
 ## Installation
 
 1. **Clone the repository**
