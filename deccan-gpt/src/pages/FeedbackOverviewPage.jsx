@@ -27,8 +27,7 @@ const RATING_OPTIONS = [
     { value: 4, label: '4 Stars' },
     { value: 3, label: '3 Stars' },
     { value: 2, label: '2 Stars' },
-    { value: 1, label: '1 Star' },
-    { value: 0, label: 'No Rating' },
+    { value: 1, label: '1 Star' }
 ];
 
 const FeedbackOverview = () => {
@@ -63,7 +62,7 @@ const FeedbackOverview = () => {
     const filteredData = conversations
         .filter((item) => {
             if (filterRating === '') return true;
-            return item.feedback.overallRating === filterRating;
+            return item.feedback?.overallRating === filterRating;
         })
         .sort((a, b) => {
             if (order === 'asc') return (a.feedback?.overallRating || 0) - (b.feedback?.overallRating || 0);
