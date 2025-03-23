@@ -78,9 +78,9 @@ export default function ChatPage() {
     setIsFeedbackOpen(true);
   }
 
-  const addConversation = useCallback(() => {
+  const addConversation = useCallback(async () => {
     // Initiates new conversation in store
-    saveCurrentConversation();
+    await saveCurrentConversation();
     dispatch(startNewConversation());
     setSelectedConversationId('');
   }, [dispatch]);
@@ -88,8 +88,8 @@ export default function ChatPage() {
   const saveCurrentConversation = useCallback(async () => {
     // Triggers when user tries to navigate to other conversation
     // in the middle of chat
-    if (conversation.messages.length > 0) {
-      const updatedConversation = store.getState().conversations.activeConversation;
+    const updatedConversation = store.getState().conversations.activeConversation;
+    if (updatedConversation.messages.length > 0) {
       try {
         await postConversation(updatedConversation);
         dispatch(saveConversation());
@@ -106,7 +106,6 @@ export default function ChatPage() {
       setIsFeedbackOpen(false);
     } catch (error) {
       console.error(error);
-      dispatch(addAiResponse("Noted! Thank you for the feedback."));
     }
   }
 

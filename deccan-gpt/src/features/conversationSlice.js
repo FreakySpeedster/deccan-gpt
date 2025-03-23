@@ -4,6 +4,7 @@ const initialState = {
   conversations: [],
   activeConversation: {
     id: `conv_${Date.now()}`,
+    title: '',
     messages: [],
     feedback: {
       overallRating: null,
@@ -23,6 +24,9 @@ const conversationSlice = createSlice({
         role: 'user',
         content: action.payload
       });
+      if (state.activeConversation.messages.length === 1) {
+        state.activeConversation.title = action.payload;
+      }
     },
     addAiResponse(state, action) {
       state.activeConversation.messages.push({
