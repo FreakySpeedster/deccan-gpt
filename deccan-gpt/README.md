@@ -116,7 +116,7 @@ This application allows users to have a chat-based conversation with an AI (mock
 - **Behavior**:  
   - Generates a unique shareable link (mocked).
   - User can copy the link to share externally.
-  - PS: ONLY Pre existing conversations will load due to mock API.
+  - PS: Links will load in local. Not loading in Production
 ---
 
 ### 7. Feedback Overview Page
