@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -10,6 +11,7 @@ import deccanSvg from '../assets/deccan.svg';
 import Sidebar from '../components/SideBar/SideBar';
 import FeedbackModal from '../components/FeedbackModal/FeedbackModal';
 import ShareChatModal from '../components/ShareChatModal/ShareChatModal';
+import NewConversationSuggestion from '../components/NewConversationSuggestion/NewConversationSuggestion';
 import { useStore } from 'react-redux';
 import { getConversations, postConversation, postUserMessage, getConversationById } from '../services/api';
 
@@ -78,6 +80,7 @@ export default function ChatPage() {
 
   const addConversation = useCallback(() => {
     // Initiates new conversation in store
+    saveCurrentConversation();
     dispatch(startNewConversation());
     setSelectedConversationId('');
   }, [dispatch]);
@@ -166,7 +169,10 @@ export default function ChatPage() {
         </Box>
 
         <Box className='conversations-container'>
-          {conversation.messages.map((msg, idx) => (
+        {conversation?.messages.length === 0 ? (
+          <NewConversationSuggestion/>
+          ) : (
+          conversation.messages.map((msg, idx) => (
             <Paper elevation={0} key={idx} sx={{
               p: 2,
               mb: 1,
@@ -198,7 +204,7 @@ export default function ChatPage() {
                 </Box>
               )}
             </Paper>
-          ))}
+          )))}
           {conversation?.isFinished && (
             <Paper elevation={1} sx={{
               maxWidth: '60%', p: 2,

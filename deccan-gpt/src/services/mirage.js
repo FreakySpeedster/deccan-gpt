@@ -3,8 +3,9 @@ import conversations from '../fixtures/conversations';
 import conversationLists from '../fixtures/conversationLists';
 
 
-export function makeServer() {
+export function makeServer({ environment = 'development' } = {}) {
   createServer({
+    environment,
     models: {
       conversationList: Model,
       conversation: Model
@@ -20,6 +21,7 @@ export function makeServer() {
       this.namespace = 'api';
 
       // POST /chat: AI responses (60% failure simulation)
+      // eslint-disable-next-line no-unused-vars
       this.post('/chat', (schema, request) => {
         const responses = [
           "Hello! How can I assist you in the best way today?",

@@ -3,31 +3,26 @@ import { useEffect, useState } from 'react';
 import deccanSvg from '../assets/deccan.svg';
 import { Box, Typography, Paper } from '@mui/material';
 import { getConversationById } from '../services/api';
-import Loader1 from '../components/Loader/Loader1';
 
 
 const ShareChatModal = () => {
   const { id } = useParams();
   const [conversation, setConversation] = useState(null);
-  const [isSharedConversationLoading, setIsSharedConversationLoading] = useState(false);
 
   useEffect(() => {
     const fetchConversation = async () => {
-      setIsSharedConversationLoading(true);
       try {
         const data = await getConversationById(id);
         setConversation(data);
       } catch (error) {
         console.error('Error fetching conversation', error);
-      } finally {
-        setIsSharedConversationLoading(false);
       }
     };
 
     fetchConversation();
   }, [id]);
 
-  if (!conversation) return <div><Loader1 /></div>;
+  if (!conversation) return <div>Loading...</div>;
 
   return (
     <Box className='page-container'>
