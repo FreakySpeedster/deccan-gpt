@@ -23,7 +23,7 @@ export default function ChatPage() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
-  const [selectedConversationId, setSelectedConversationId] = useState('');
+  const [selectedConversationId, setSelectedConversationId] = useState(conversation.id ? conversation.id : '');
   
 
   const messagesEndRef = useRef(null);
@@ -34,16 +34,17 @@ export default function ChatPage() {
   }, [conversation]);
 
   useEffect(() => {
-    const fetchConversations = async () => {
-      setIsLoadingConversations(true);
-      const response = await fetch('/api/conversations');
-      const formattedResponse = await response.json();
-      dispatch(setConversations(formattedResponse));
-      setIsLoadingConversations(false);
-    };
-  
-    fetchConversations();
-  }, [dispatch]);
+    if (conversations.length === 0) {
+      const fetchConversations = async () => {
+        setIsLoadingConversations(true);
+        const response = await fetch('/api/conversations');
+        const formattedResponse = await response.json();
+        dispatch(setConversations(formattedResponse));
+        setIsLoadingConversations(false);
+      };
+      fetchConversations();
+    }
+  }, [conversations.length, dispatch]);
   
   const handleSend = async () => {
     if (!input.trim()) return;
