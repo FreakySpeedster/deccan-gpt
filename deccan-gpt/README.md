@@ -160,26 +160,26 @@ This application allows users to have a chat-based conversation with an AI (mock
 
 ## 🤔 Technical Choices, Design Decisions and Tradeoffs
 
-- **MirageJS**:
+### 1. **MirageJS**:
 🛠️ Used to mock backend APIs without depending on actual backend development or network conditions. Useful for both development and production demos, ensuring the app works as expected, even with mocked responses. The VITE_ENABLE_MIRAGE=true flag adds flexibility in enabling/disabling Mirage.   
 
-- **End Conversation**:
+### 2. **End Conversation functionality**:
 
 After the user clicks **"End Conversation"**, the input field is hidden, and the user is encouraged to create a **new conversation** instead of continuing the old one.
 
-### 1. **Encourages Focused, Contextual Interactions**
+#### 1. **Encourages Focused, Contextual Interactions**
 - **Why it matters**:  
   Ending a conversation sets a **contextual boundary**.
 - **Benefit**:  
   Encourages users to **refocus** their questions or discussions in a new, relevant session rather than cluttering old conversations with unrelated messages.
 
-### 2. **Improves Organization**
+#### 2. **Improves Organization**
 - **Why it matters**:  
   Each conversation is treated as an **independent unit**.
 - **Benefit**:  
   Makes it easier to **organize, retrieve, and check back** conversations later. Useful for **feedback analytics** and **training data** separation.
 
-### 3. **[Technical] Simplifies State Management**
+#### 3. **[Technical] Simplifies State Management**
 - **Why it matters**:  
   There’s no need to track whether the AI should still be “in context” after a session ends.
 - **Benefit**:  
