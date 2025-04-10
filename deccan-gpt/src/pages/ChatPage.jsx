@@ -7,7 +7,7 @@ import {
 } from '../features/conversationSlice';
 import { Box, Button, TextField, Typography, Paper, IconButton, Rating } from '@mui/material';
 import { ThumbUp, ThumbDown, ArrowCircleUp, Close, IosShare } from '@mui/icons-material';
-import deccanSvg from '../assets/deccan.svg';
+import deccanSvg from '../assets/LeoAI.svg';
 import Sidebar from '../components/SideBar/SideBar';
 import FeedbackModal from '../components/FeedbackModal/FeedbackModal';
 import ShareChatModal from '../components/ShareChatModal/ShareChatModal';

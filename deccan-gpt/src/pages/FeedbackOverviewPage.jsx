@@ -18,7 +18,7 @@ import {
     Button
 } from '@mui/material';
 import { setConversations } from '../features/conversationSlice';
-import deccanSvg from '../assets/deccan.svg';
+import deccanSvg from '../assets/LeoAI.svg';
 import { useNavigate } from 'react-router-dom';
 
 const RATING_OPTIONS = [

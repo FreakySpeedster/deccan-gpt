@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import deccanSvg from '../assets/deccan.svg';
+import deccanSvg from '../assets/LeoAI.svg';
 import { Box, Typography, Paper } from '@mui/material';
 import { getConversationById } from '../services/api';
 
